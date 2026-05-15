@@ -1,0 +1,130 @@
+.login-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 60px 16px;
+  background: #fffaf6;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 34px;
+  border: 1px solid #eee5dd;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(43, 28, 18, 0.08);
+}
+
+.login-card p {
+  margin: 0 0 10px;
+  color: #9a6a45;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.login-card h1 {
+  margin: 0 0 26px;
+  color: #1f1712;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #2b211c;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.login-form input {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #e0cdbb;
+  border-radius: 14px;
+  background: #fffaf6;
+  color: #1f1712;
+  outline: none;
+}
+
+.login-form input:focus {
+  border-color: #9a6a45;
+}
+
+.login-form button {
+  height: 50px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: #17110d;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.login-extra {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  color: #6d5a4c;
+  font-size: 14px;
+}
+
+.login-extra a {
+  color: #9a6a45;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.login-extra a:hover {
+  text-decoration: underline;
+}
+
+.demo-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px dashed #d8c4b4;
+  border-radius: 18px;
+  background: #fffaf6;
+}
+
+.demo-box strong {
+  color: #1f1712;
+  font-size: 14px;
+}
+
+.demo-box span {
+  color: #6d5a4c;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .login-card {
+    padding: 28px 22px;
+  }
+
+  .login-extra {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .login-extra span {
+    display: none;
+  }
+}

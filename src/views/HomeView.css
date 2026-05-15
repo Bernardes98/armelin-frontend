@@ -1,0 +1,97 @@
+.home-view {
+  background: #fffaf6;
+}
+
+.featured-section {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.section-header {
+  max-width: 650px;
+  margin-bottom: 34px;
+}
+
+.section-header p {
+  margin: 0 0 10px;
+  color: #9a6a45;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #1f1712;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.05;
+}
+
+.section-header span {
+  display: block;
+  margin-top: 14px;
+  color: #6d5a4c;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.benefits-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px 90px;
+  gap: 22px;
+}
+
+.benefit-card {
+  padding: 26px;
+  border: 1px solid #eee5dd;
+  border-radius: 24px;
+  background: #fff;
+}
+
+.benefit-card strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #1f1712;
+  font-size: 18px;
+}
+
+.benefit-card span {
+  color: #6d5a4c;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .benefits-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .featured-section {
+    padding: 28px 16px 56px;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .benefits-section {
+    padding: 0 16px 64px;
+  }
+}
