@@ -1,6 +1,11 @@
 <template>
   <article class="product-card">
-    <RouterLink :to="`/produtos/${product.id}`" class="product-image-wrapper">
+    <RouterLink
+      :to="`/produtos/${product.id}`"
+      class="product-image-wrapper"
+      draggable="false"
+      @dragstart.prevent
+    >
       <span v-if="hasDiscount" class="discount-badge">
         {{ discountPercentage }}% OFF
       </span>
@@ -8,19 +13,33 @@
       <button
         type="button"
         :class="['favorite-button', { active: favoriteStore.isFavorite(product.id) }]"
-        :aria-label="favoriteStore.isFavorite(product.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
-        @click.prevent="favoriteStore.toggleFavorite(product)"
+        :aria-label="
+          favoriteStore.isFavorite(product.id)
+            ? 'Remover dos favoritos'
+            : 'Adicionar aos favoritos'
+        "
+        @click.prevent.stop="favoriteStore.toggleFavorite(product)"
       >
         ♥
       </button>
 
-      <img :src="product.image" :alt="product.name" />
+      <img
+        :src="product.image"
+        :alt="product.name"
+        draggable="false"
+        @dragstart.prevent
+      />
     </RouterLink>
 
     <div class="product-info">
       <p class="product-category">{{ product.category }}</p>
 
-      <RouterLink :to="`/produtos/${product.id}`" class="product-title">
+      <RouterLink
+        :to="`/produtos/${product.id}`"
+        class="product-title"
+        draggable="false"
+        @dragstart.prevent
+      >
         {{ product.name }} - {{ product.volume }}
       </RouterLink>
 

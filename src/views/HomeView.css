@@ -2,22 +2,22 @@
   background: #fffaf6;
 }
 
-.featured-section {
+.collections-section {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  padding: 10px 24px 80px;
 }
 
 .section-header {
-  max-width: 650px;
-  margin-bottom: 34px;
+  max-width: 680px;
+  margin-bottom: 30px;
 }
 
 .section-header p {
   margin: 0 0 10px;
   color: #9a6a45;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -37,10 +37,47 @@
   line-height: 1.7;
 }
 
-.products-grid {
+.collection-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.collection-card {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+  border: 1px solid #eee5dd;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(23, 17, 13, 0.08), rgba(23, 17, 13, 0.82)),
+    linear-gradient(135deg, #f3e7dd, #d8c4b4);
+  color: #fff;
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.collection-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 70px rgba(43, 28, 18, 0.14);
+}
+
+.collection-card strong {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.collection-card span {
+  max-width: 280px;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .benefits-section {
@@ -72,26 +109,32 @@
   line-height: 1.6;
 }
 
-@media (max-width: 1024px) {
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 900px) {
+  .collection-grid,
+  .benefits-section {
+    grid-template-columns: 1fr;
+  }
+
+  .collections-section {
+    padding: 0 18px 56px;
   }
 
   .benefits-section {
-    grid-template-columns: 1fr;
+    padding: 0 18px 64px;
   }
 }
 
 @media (max-width: 560px) {
-  .featured-section {
-    padding: 28px 16px 56px;
-  }
-
-  .products-grid {
-    grid-template-columns: 1fr;
+  .collections-section {
+    padding: 0 16px 48px;
   }
 
   .benefits-section {
-    padding: 0 16px 64px;
+    padding: 0 16px 56px;
+  }
+
+  .collection-card {
+    min-height: 190px;
+    padding: 24px;
   }
 }

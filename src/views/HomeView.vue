@@ -1,23 +1,37 @@
 <template>
   <div class="home-view">
-    <HeroSection />
+    <ProductCarousel
+      kicker="Produtos selecionados"
+      title="Fragrâncias em destaque"
+      description="Uma curadoria inicial com perfumes marcantes para apresentar a proposta da loja."
+      :products="featuredProducts"
+      @add-to-cart="cartStore.addProduct"
+    />
 
-    <section class="featured-section">
+    <section class="collections-section">
       <div class="section-header">
-        <p>Produtos selecionados</p>
-        <h2>Fragrâncias em destaque</h2>
+        <p>Explore por estilo</p>
+        <h2>Escolha sua fragrância ideal</h2>
         <span>
-          Uma curadoria inicial com perfumes marcantes para apresentar a proposta da loja.
+          Navegue por categorias e encontre perfumes femininos, masculinos e compartilháveis.
         </span>
       </div>
 
-      <div class="products-grid">
-        <ProductCard
-          v-for="product in featuredProducts"
-          :key="product.id"
-          :product="product"
-          @add-to-cart="cartStore.addProduct"
-        />
+      <div class="collection-grid">
+        <RouterLink to="/produtos?categoria=Feminino" class="collection-card">
+          <strong>Femininos</strong>
+          <span>Fragrâncias elegantes, florais, doces e sofisticadas.</span>
+        </RouterLink>
+
+        <RouterLink to="/produtos?categoria=Masculino" class="collection-card">
+          <strong>Masculinos</strong>
+          <span>Perfumes intensos, amadeirados, frescos e marcantes.</span>
+        </RouterLink>
+
+        <RouterLink to="/produtos?categoria=Unissex" class="collection-card">
+          <strong>Unissex</strong>
+          <span>Notas versáteis para diferentes estilos e momentos.</span>
+        </RouterLink>
       </div>
     </section>
 
@@ -41,13 +55,12 @@
 </template>
 
 <script setup>
-import HeroSection from '../components/home/HeroSection.vue'
-import ProductCard from '../components/product/ProductCard.vue'
+import ProductCarousel from '../components/product/ProductCarousel.vue'
 import { products } from '../data/products'
 import { useCartStore } from '../stores/cartStore'
 
 const cartStore = useCartStore()
-const featuredProducts = products.slice(0, 4)
+const featuredProducts = products
 </script>
 
 <style scoped src="./HomeView.css"></style>
