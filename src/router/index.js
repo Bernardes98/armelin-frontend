@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import AdminPanel from '../views/admin/AdminPanel.vue'
 import HomeView from '../views/HomeView.vue'
 import ProductsView from '../views/ProductsView.vue'
 import ProductDetailsView from '../views/ProductDetailsView.vue'
@@ -16,6 +17,7 @@ import FaqView from '../views/institutional/FaqView.vue'
 import TermsOfUseView from '../views/institutional/TermsOfUseView.vue'
 
 const routes = [
+  {path: "/admin", name: "admin", component: AdminPanel, meta: {title: "Administração | Armelin"}},
   {
     path: '/',
     name: 'home',

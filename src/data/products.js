@@ -1,4 +1,5 @@
-export const products = [
+import { reactive } from 'vue'
+export const products = reactive([
   {
     id: 1,
     name: 'Fine Silk',
@@ -89,4 +90,11 @@ export const products = [
     description:
       'Perfume leve e fresco, com saída cítrica e sensação limpa para o dia a dia.',
   },
-]
+])
+// Atualiza a lista compartilhada sem mudar a referência utilizada pelos componentes Vue.
+import { apiFetch } from '../services/api'
+export async function refreshProducts() {
+  const remote = await apiFetch('/products')
+  products.splice(0, products.length, ...remote)
+  return products
+}

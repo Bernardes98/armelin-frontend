@@ -11,7 +11,7 @@
         <div class="checkout-header">
           <p>Finalização</p>
           <h1>Checkout</h1>
-          <span>Preencha os dados abaixo para simular a finalização do pedido.</span>
+          <span>Preencha seus dados para criar o pedido e seguir para o pagamento seguro.</span>
         </div>
 
         <form class="checkout-form" @submit.prevent="finishOrder">
@@ -78,37 +78,14 @@
           </div>
 
           <div class="form-card">
-            <h2>Pagamento</h2>
+            <h2>Pagamento seguro pelo Mercado Pago</h2>
 
-            <div class="payment-options">
-              <label class="payment-option">
-                <input v-model="form.paymentMethod" type="radio" value="pix" />
-                <span>
-                  <strong>Pix</strong>
-                  <small>Aprovação rápida</small>
-                </span>
-              </label>
-
-              <label class="payment-option">
-                <input v-model="form.paymentMethod" type="radio" value="card" />
-                <span>
-                  <strong>Cartão de crédito</strong>
-                  <small>Parcele em até 6x sem juros</small>
-                </span>
-              </label>
-
-              <label class="payment-option">
-                <input v-model="form.paymentMethod" type="radio" value="boleto" />
-                <span>
-                  <strong>Boleto</strong>
-                  <small>Compensação em até 3 dias úteis</small>
-                </span>
-              </label>
-            </div>
+            <p>Você escolherá as formas de pagamento disponíveis na página segura do Mercado Pago.</p>
           </div>
 
-          <button type="submit" class="finish-button">
-            Finalizar pedido
+          <p v-if="checkoutError" role="alert" style="color:#a32424">{{ checkoutError }}</p>
+          <button type="submit" class="finish-button" :disabled="submitting">
+            {{ submitting ? 'Processando...' : 'Ir para o pagamento' }}
           </button>
         </form>
       </div>
@@ -146,8 +123,7 @@
         </div>
 
         <p class="summary-note">
-          Este checkout é uma simulação visual. Pagamento, frete real e pedido no banco serão
-          integrados em uma próxima etapa.
+          O frete exibido é provisório. O pedido só será considerado pago após confirmação do Mercado Pago. A loja deve configurar sua política de entregas antes de operar.
         </p>
       </aside>
     </section>
@@ -155,11 +131,14 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import { apiFetch } from '../services/api'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cartStore'
 
 const router = useRouter()
+const checkoutError = ref('')
+const submitting = ref(false)
 const cartStore = useCartStore()
 
 const form = reactive({
@@ -183,39 +162,23 @@ const orderTotal = computed(() => {
   return cartStore.totalPrice + shippingFee.value
 })
 
-function finishOrder() {
-  const orderNumber = `ARM-${Date.now().toString().slice(-6)}`
-
-  const order = {
-    number: orderNumber,
-    createdAt: new Date().toISOString(),
-    customer: {
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      document: form.document,
-    },
-    delivery: {
-      zipCode: form.zipCode,
-      city: form.city,
-      address: form.address,
-      number: form.number,
-      complement: form.complement,
-    },
-    paymentMethod: form.paymentMethod,
-    items: cartStore.items.map((item) => ({
-      ...item,
-    })),
-    subtotal: cartStore.totalPrice,
-    shippingFee: shippingFee.value,
-    total: orderTotal.value,
+async function finishOrder() {
+  if (submitting.value) return
+  checkoutError.value = ''
+  submitting.value = true
+  try {
+    const result = await apiFetch('/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ ...form, items: cartStore.items.map(({ id, quantity }) => ({ id, quantity })) }),
+    })
+    if (!result.checkoutUrl?.startsWith('https://')) throw new Error('Link de pagamento inválido')
+    // Carrinho mantido até retornar do pagamento, para permitir nova tentativa em falhas.
+    window.location.assign(result.checkoutUrl)
+  } catch (error) {
+    checkoutError.value = error.message || 'Não foi possível criar o pedido'
+  } finally {
+    submitting.value = false
   }
-
-  sessionStorage.setItem('armelin-last-order', JSON.stringify(order))
-
-  cartStore.clearCart()
-
-  router.push(`/pedido-finalizado/${orderNumber}`)
 }
 
 function formatCurrency(value) {

@@ -7,11 +7,10 @@
         </div>
 
         <p>Pedido recebido</p>
-        <h1>Compra finalizada com sucesso</h1>
+        <h1>Pedido criado — pagamento em análise</h1>
 
         <span>
-          Obrigado, {{ order.customer.name }}. Seu pedido foi gerado e está aguardando a próxima
-          etapa de processamento.
+          Obrigado, {{ order.customer.name }}. O pagamento precisa ser confirmado pela loja antes da separação e do envio.
         </span>
 
         <div class="order-number-box">
@@ -95,8 +94,7 @@
     <section v-else class="missing-order">
       <h1>Pedido não encontrado</h1>
       <p>
-        Não encontramos os dados do último pedido nesta sessão. Volte para a loja e simule uma nova
-        compra.
+        Não encontramos os dados do último pedido nesta sessão. Volte para a loja e faça uma nova compra.
       </p>
 
       <RouterLink to="/produtos">
