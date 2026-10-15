@@ -1,67 +1,19 @@
-<template>
-  <div class="login-view">
-    <section class="login-card">
-      <p>Acesse sua conta</p>
-      <h1>Entrar</h1>
-
-      <form class="login-form" @submit.prevent="handleSubmit">
-        <label>
-          E-mail
-          <input v-model="form.email" type="email" placeholder="seuemail@exemplo.com" required />
-        </label>
-
-        <label>
-          Senha
-          <input v-model="form.password" type="password" placeholder="Digite sua senha" required />
-        </label>
-
-        <button type="submit">
-          Entrar
-        </button>
-      </form>
-
-      <div class="login-extra">
-        <a href="#" @click.prevent="showMockMessage">Esqueci minha senha</a>
-        <span>•</span>
-        <a href="#" @click.prevent="showMockMessage">Criar conta</a>
-      </div>
-
-      <div class="demo-box">
-        <strong>Conta demonstrativa</strong>
-        <span>Use qualquer e-mail e senha para acessar a página mockada.</span>
-      </div>
-    </section>
-  </div>
-</template>
-
+<template><div class="login-view"><section class="login-card">
+  <p>Perfumes</p><h1>{{mode==='login'?'Entrar':mode==='register'?'Criar conta':'Recuperar senha'}}</h1>
+  <form class="login-form" @submit.prevent="submit">
+   <label v-if="mode==='register'">Nome completo<input v-model.trim="name" autocomplete="name" required /></label>
+   <label>E-mail<input v-model.trim="email" type="email" autocomplete="email" required /></label>
+   <label v-if="mode!=='forgot'">Senha<input v-model="password" type="password" :autocomplete="mode==='login'?'current-password':'new-password'" required /></label>
+   <button :disabled="busy" type="submit">{{busy?'Aguarde...':mode==='login'?'Entrar':mode==='register'?'Cadastrar':'Enviar link por e-mail'}}</button>
+  </form><p v-if="message" role="status">{{message}}</p>
+  <div class="login-extra"><a href="#" @click.prevent="change('login')">Entrar</a><span>•</span><a href="#" @click.prevent="change('register')">Criar conta</a><span>•</span><a href="#" @click.prevent="change('forgot')">Esqueci minha senha</a></div>
+ </section></div></template>
 <script setup>
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useNotificationStore } from '../stores/notificationStore'
-
-const router = useRouter()
-const notificationStore = useNotificationStore()
-
-const form = reactive({
-  email: '',
-  password: '',
-})
-
-function handleSubmit() {
-  notificationStore.success(
-    'Login realizado',
-    'Você entrou na conta demonstrativa.',
-  )
-
-  router.push('/minha-conta')
-}
-
-function showMockMessage() {
-  notificationStore.info(
-    'Funcionalidade demonstrativa',
-    'Essa ação será integrada ao backend em uma próxima etapa.',
-  )
-}
-</script>
-
-<style scoped src="./LoginView.css"></style>
+import { apiFetch } from '../services/api'
+import { signIn, register } from '../services/auth'
+const router=useRouter(),mode=ref('login'),name=ref(''),email=ref(''),password=ref(''),busy=ref(false),message=ref('')
+function change(value){mode.value=value;message.value='';password.value=''}
+async function submit(){busy.value=true;message.value='';try{if(mode.value==='forgot'){const data=await apiFetch('/auth/forgot-password',{method:'POST',body:JSON.stringify({email:email.value})});message.value=data.message;return}if(mode.value==='register')await register(name.value,email.value,password.value);else await signIn(email.value,password.value);await router.push('/minha-conta')}catch(e){message.value=e.message}finally{busy.value=false}}
+</script><style scoped src="./LoginView.css"></style>

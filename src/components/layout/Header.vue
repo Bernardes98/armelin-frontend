@@ -17,8 +17,8 @@
       </button>
 
       <RouterLink to="/" class="brand" @click="closeAllMenus">
-        <span class="brand-main">ARMELIN</span>
-        <span class="brand-subtitle">Perfumes</span>
+        <span class="brand-main">PERFUMES</span>
+        
       </RouterLink>
 
       <nav class="desktop-nav">
@@ -82,7 +82,7 @@
           </svg>
         </button>
 
-        <RouterLink to="/login" class="icon-button desktop-only" aria-label="Minha conta">
+        <RouterLink :to="authState.token ? '/minha-conta' : '/login'" class="icon-button desktop-only" aria-label="Minha conta">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M12 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm-8 11a8 8 0 1 1 16 0h-2a6 6 0 1 0-12 0H4Z"
@@ -135,7 +135,7 @@
         <aside class="mobile-menu-panel">
           <div class="mobile-menu-header">
             <RouterLink to="/" class="mobile-menu-logo" @click="closeMobileMenu">
-              <span>ARMELIN</span>
+              <span>PERFUMES</span>
               <small>Perfumes</small>
             </RouterLink>
 
@@ -234,6 +234,8 @@
 </template>
 
 <script setup>
+import { authState } from '../../services/auth'
+
 import { onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 

@@ -1,6 +1,8 @@
 <template>
   <div class="product-details-view">
-    <section v-if="product" class="product-details-section">
+    <p v-if="detailLoading" role="status">Carregando produto...</p>
+    <p v-else-if="detailError" role="alert">{{ detailError }}</p>
+    <section v-else-if="product" class="product-details-section">
       <div class="product-gallery">
         <div class="product-main-image">
           <img :src="selectedImage" :alt="product.name" />
@@ -172,6 +174,8 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { apiFetch } from '../services/api'
+import { catalogStatus, refreshProducts } from '../data/products'
 import { useRoute } from 'vue-router'
 import ProductCard from '../components/product/ProductCard.vue'
 import { products } from '../data/products'
@@ -185,10 +189,20 @@ const selectedImage = ref('')
 const activeTab = ref('description')
 const zipCode = ref('')
 const shippingMessage = ref('')
+const detailLoading = ref(false)
+const detailError = ref('')
+const remoteProduct = ref(null)
+watch(() => route.params.id, async (id) => {
+  detailLoading.value = true; detailError.value = ''; remoteProduct.value = null
+  try { remoteProduct.value = await apiFetch('/products/' + encodeURIComponent(id))
+    if (!catalogStatus.loaded) refreshProducts().catch(() => {})
+  } catch (e) { detailError.value = e.message || 'Produto indisponível' }
+  finally { detailLoading.value = false }
+}, { immediate: true })
 
 const product = computed(() => {
   const productId = Number(route.params.id)
-  return products.find((item) => item.id === productId)
+  return remoteProduct.value || products.find((item) => item.id === productId)
 })
 
 const galleryImages = computed(() => {

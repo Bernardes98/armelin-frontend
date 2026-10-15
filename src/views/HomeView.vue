@@ -1,6 +1,8 @@
 <template>
   <div class="home-view">
-    <ProductCarousel
+    <p v-if="catalogStatus.loading" role="status">Carregando produtos...</p>
+    <p v-else-if="catalogStatus.error" role="alert">Não foi possível carregar os perfumes. <button @click="refreshProducts(true)">Tentar novamente</button></p>
+    <ProductCarousel v-else-if="products.length"
       kicker="Produtos selecionados"
       title="Fragrâncias em destaque"
       description="Uma curadoria inicial com perfumes marcantes para apresentar a proposta da loja."
@@ -56,7 +58,7 @@
 
 <script setup>
 import ProductCarousel from '../components/product/ProductCarousel.vue'
-import { products } from '../data/products'
+import { products, catalogStatus, refreshProducts } from '../data/products'
 import { useCartStore } from '../stores/cartStore'
 
 const cartStore = useCartStore()

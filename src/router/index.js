@@ -8,6 +8,7 @@ import CheckoutView from '../views/CheckoutView.vue'
 import OrderSuccessView from '../views/OrderSuccessView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
+import ResetPasswordView from '../views/ResetPasswordView.vue'
 import AccountView from '../views/AccountView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 
@@ -17,13 +18,14 @@ import FaqView from '../views/institutional/FaqView.vue'
 import TermsOfUseView from '../views/institutional/TermsOfUseView.vue'
 
 const routes = [
-  {path: "/admin", name: "admin", component: AdminPanel, meta: {title: "Administração | Armelin"}},
+  {path:'/redefinir-senha',component:ResetPasswordView,meta:{title:'Redefinir senha | Perfumes'}},
+  {path: "/admin", name: "admin", component: AdminPanel, meta: {title: "Administração | Perfumes"}},
   {
     path: '/',
     name: 'home',
     component: HomeView,
     meta: {
-      title: 'Armelin Perfumes',
+      title: 'Perfumes',
     },
   },
   {
@@ -31,7 +33,7 @@ const routes = [
     name: 'products',
     component: ProductsView,
     meta: {
-      title: 'Produtos | Armelin Perfumes',
+      title: 'Produtos | Perfumes',
     },
   },
   {
@@ -39,7 +41,7 @@ const routes = [
     name: 'product-details',
     component: ProductDetailsView,
     meta: {
-      title: 'Produto | Armelin Perfumes',
+      title: 'Produto | Perfumes',
     },
   },
   {
@@ -47,7 +49,7 @@ const routes = [
     name: 'checkout',
     component: CheckoutView,
     meta: {
-      title: 'Checkout | Armelin Perfumes',
+      title: 'Checkout | Perfumes',
     },
   },
   {
@@ -55,7 +57,7 @@ const routes = [
     name: 'order-success',
     component: OrderSuccessView,
     meta: {
-      title: 'Pedido finalizado | Armelin Perfumes',
+      title: 'Pedido finalizado | Perfumes',
     },
   },
   {
@@ -63,7 +65,7 @@ const routes = [
     name: 'about',
     component: AboutView,
     meta: {
-      title: 'Sobre | Armelin Perfumes',
+      title: 'Sobre | Perfumes',
     },
   },
   {
@@ -71,7 +73,7 @@ const routes = [
     name: 'login',
     component: LoginView,
     meta: {
-      title: 'Login | Armelin Perfumes',
+      title: 'Login | Perfumes',
     },
   },
   {
@@ -79,7 +81,7 @@ const routes = [
     name: 'account',
     component: AccountView,
     meta: {
-      title: 'Minha Conta | Armelin Perfumes',
+      title: 'Minha Conta | Perfumes',
     },
   },
   {
@@ -87,7 +89,7 @@ const routes = [
     name: 'privacy-policy',
     component: PrivacyPolicyView,
     meta: {
-      title: 'Política de Privacidade | Armelin Perfumes',
+      title: 'Política de Privacidade | Perfumes',
     },
   },
   {
@@ -95,7 +97,7 @@ const routes = [
     name: 'terms-of-use',
     component: TermsOfUseView,
     meta: {
-      title: 'Termos de Uso | Armelin Perfumes',
+      title: 'Termos de Uso | Perfumes',
     },
   },
   {
@@ -103,7 +105,7 @@ const routes = [
     name: 'exchange-policy',
     component: ExchangePolicyView,
     meta: {
-      title: 'Trocas e Devoluções | Armelin Perfumes',
+      title: 'Trocas e Devoluções | Perfumes',
     },
   },
   {
@@ -111,7 +113,7 @@ const routes = [
     name: 'faq',
     component: FaqView,
     meta: {
-      title: 'Perguntas Frequentes | Armelin Perfumes',
+      title: 'Perguntas Frequentes | Perfumes',
     },
   },
   {
@@ -119,7 +121,7 @@ const routes = [
     name: 'not-found',
     component: NotFoundView,
     meta: {
-      title: 'Página não encontrada | Armelin Perfumes',
+      title: 'Página não encontrada | Perfumes',
     },
   },
 ]
@@ -133,7 +135,7 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
-  document.title = to.meta.title || 'Armelin Perfumes'
+  document.title = to.meta.title || 'Perfumes'
 })
 
 export default router

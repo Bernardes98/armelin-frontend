@@ -20,8 +20,8 @@
     <section class="footer-main">
       <div class="footer-brand">
         <RouterLink to="/" class="footer-logo">
-          <span class="footer-logo-main">ARMELIN</span>
-          <span class="footer-logo-subtitle">Perfumes</span>
+          <span class="footer-logo-main">PERFUMES</span>
+          
         </RouterLink>
 
         <p>
@@ -67,7 +67,7 @@
 
       <div class="footer-column">
         <h3>Institucional</h3>
-        <RouterLink to="/sobre">Sobre a Armelin</RouterLink>
+        <RouterLink to="/sobre">Sobre a Perfumes</RouterLink>
         <RouterLink to="/politica-de-privacidade">Política de privacidade</RouterLink>
         <RouterLink to="/termos-de-uso">Termos de uso</RouterLink>
         <RouterLink to="/trocas-e-devolucoes">Trocas e devoluções</RouterLink>
@@ -114,7 +114,7 @@
 
     <section class="footer-bottom">
       <p>
-        © {{ currentYear }} Armelin Perfumes. Todos os direitos reservados.
+        © {{ currentYear }} Perfumes. Todos os direitos reservados.
       </p>
 
       <span>

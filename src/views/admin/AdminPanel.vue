@@ -1,7 +1,7 @@
 <template>
   <div class="admin-shell">
     <aside class="admin-menu">
-      <div class="admin-brand">ARMELIN <small>ADMINISTRAÇÃO</small></div>
+      <div class="admin-brand">PERFUMES <small>ADMINISTRAÇÃO</small></div>
       <template v-if="authenticated">
         <button :class="{ selected: tab==='dashboard' }" @click="tab='dashboard';load()">Visão geral</button>
         <button :class="{ selected: tab==='products' }" @click="tab='products';load()">Perfumes e estoque</button>
@@ -36,7 +36,7 @@
         </template>
         <template v-if="tab==='products'">
           <div class="admin-toolbar"><p>{{products.length}} perfumes cadastrados</p><button @click="newProduct">+ Novo perfume</button></div>
-          <div class="panel admin-table-wrap"><table><thead><tr><th>Produto</th><th>Preço</th><th>Estoque</th><th>Status</th><th></th></tr></thead><tbody><tr v-for="p in products" :key="p.id"><td><div class="product-cell"><img v-if="p.image" :src="p.image" alt="" /><div><b>{{p.name}}</b><small>{{p.volume}} · {{p.category}}</small></div></div></td><td>{{money(p.price)}}</td><td>{{p.stock}}</td><td>{{p.active?'Ativo':'Inativo'}}</td><td><button class="secondary" @click="editProduct(p)">Editar</button></td></tr></tbody></table></div>
+          <div class="panel admin-table-wrap"><table><thead><tr><th>Produto</th><th>Preço</th><th>Estoque</th><th>Status</th><th></th></tr></thead><tbody><tr v-for="p in products" :key="p.id"><td><div class="product-cell"><img v-if="p.image" :src="p.image" alt="" /><div><b>{{p.name}}</b><small>{{p.volume}} · {{p.category}}</small></div></div></td><td>{{money(p.price)}}</td><td>{{p.stock}}</td><td>{{p.active?'Ativo':'Inativo'}}</td><td><button class="secondary" @click="editProduct(p)">Editar</button> <button class="secondary" @click="deactivateProduct(p)">Desativar</button></td></tr></tbody></table></div>
           <div v-if="editing" class="admin-modal-backdrop" @click.self="editing=false"><form class="panel admin-editor" @submit.prevent="saveProduct"><div class="admin-editor-head"><h2>{{form.id?'Editar perfume':'Cadastrar perfume'}}</h2><button class="secondary" type="button" @click="editing=false">Fechar</button></div><div class="admin-fields">
             <label>Nome *<input v-model.trim="form.name" required maxlength="255" /></label>
             <label>Volume<input v-model.trim="form.volume" placeholder="100ml" /></label>
@@ -52,7 +52,7 @@
             <label class="inline"><input v-model="form.active" type="checkbox" /> Disponível na loja</label>
           </div><p class="admin-error" v-if="error" role="alert">{{error}}</p><button type="submit" :disabled="saving">{{saving?'Salvando...':'Salvar perfume'}}</button></form></div>
         </template>
-        <template v-if="tab==='orders'"><div class="panel admin-table-wrap"><table><thead><tr><th>Nº pedido</th><th>Cliente</th><th>Data</th><th>Itens</th><th>Valor</th><th>Pagamento</th></tr></thead><tbody><tr v-for="o in orders" :key="o.id"><td><b>{{o.number}}</b></td><td>{{o.customerName}}<small>{{o.customerEmail}}</small></td><td>{{date(o.createdAt)}}</td><td><details><summary>{{o.items?.length || 0}} itens</summary><p v-for="item in o.items" :key="item.id">{{item.quantity}}x {{item.name}} ({{item.volume}})</p><p>Entrega: {{o.address}}, {{o.addressNumber}} — {{o.city}} / {{o.zipCode}}</p></details></td><td>{{money(o.total)}}</td><td><span class="status" :class="o.status">{{statusLabel(o.status)}}</span></td></tr><tr v-if="!orders.length"><td colspan="6">Nenhum pedido encontrado.</td></tr></tbody></table></div></template>
+        <template v-if="tab==='orders'"><div class="panel admin-table-wrap"><table><thead><tr><th>Nº pedido</th><th>Cliente</th><th>Data</th><th>Itens</th><th>Valor</th><th>Pagamento / envio</th></tr></thead><tbody><tr v-for="o in orders" :key="o.id"><td><b>{{o.number}}</b></td><td>{{o.customerName}}<small>{{o.customerEmail}}</small></td><td>{{date(o.createdAt)}}</td><td><details><summary>{{o.items?.length || 0}} itens</summary><p v-for="item in o.items" :key="item.id">{{item.quantity}}x {{item.name}} ({{item.volume}})</p><p>Entrega: {{o.address}}, {{o.addressNumber}} — {{o.city}} / {{o.zipCode}}</p></details></td><td>{{money(o.total)}}</td><td><span class="status" :class="o.status">{{statusLabel(o.status)}}</span> <button v-if="o.status==='PAID' || o.status==='SHIPPED'" class="secondary" @click="advanceOrder(o)">{{o.status==='PAID'?'Marcar enviado':'Marcar entregue'}}</button></td></tr><tr v-if="!orders.length"><td colspan="6">Nenhum pedido encontrado.</td></tr></tbody></table></div></template>
       </template>
     </section>
   </div>
@@ -72,6 +72,8 @@ async function load(){if(!authenticated.value)return;error.value='';busy.value=t
 function newProduct(){form.value={name:'',volume:'',subtitle:'',price:0,oldPrice:null,stock:0,category:'',gender:'',family:'',image:'',description:'',active:true};error.value='';editing.value=true}
 function editProduct(p){form.value={...p};error.value='';editing.value=true}
 async function saveProduct(){error.value='';saving.value=true;try{const id=form.value.id;await request(id?'/products/'+id:'/products',{method:id?'PUT':'POST',body:JSON.stringify(form.value)});editing.value=false;await load()}catch(e){error.value=e.message}finally{saving.value=false}}
+async function deactivateProduct(p){if(!confirm('Desativar '+p.name+'?'))return;try{await request('/products/'+p.id,{method:'DELETE'});await load()}catch(e){error.value=e.message}}
+async function advanceOrder(o){const status=o.status==='PAID'?'SHIPPED':'DELIVERED';if(!confirm('Alterar pedido para '+status+'?'))return;try{await request('/orders/'+o.id+'/fulfillment',{method:'PATCH',body:JSON.stringify({status})});await load()}catch(e){error.value=e.message}}
 onMounted(async()=>{if(auth.value){try{await request('/me');authenticated.value=true;await load()}catch{logout()}}})
 </script>
 <style scoped src="./AdminPanel.css"></style>

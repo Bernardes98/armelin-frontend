@@ -57,12 +57,12 @@
 
             <div>
               <span>Telefone</span>
-              <strong>{{ user.phone }}</strong>
+              <strong>{{ user.phone || 'Não cadastrado' }}</strong>
             </div>
 
             <div>
               <span>CPF</span>
-              <strong>{{ user.document }}</strong>
+              <strong>{{ user.document || 'Não cadastrado' }}</strong>
             </div>
           </div>
         </section>
@@ -79,6 +79,8 @@
             </RouterLink>
           </div>
 
+          <p v-if="ordersError" role="alert">{{ ordersError }}</p>
+          <div v-if="!orders.length && !ordersError" class="favorites-empty">Nenhum pedido encontrado.</div>
           <div class="orders-list">
             <article v-for="order in orders" :key="order.number" class="order-card">
               <div class="order-main">
@@ -178,7 +180,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { authState, loadMe, signOut } from '../services/auth'
+import { apiFetch } from '../services/api'
 import { useRouter } from 'vue-router'
 import ProductCard from '../components/product/ProductCard.vue'
 import { products } from '../data/products'
@@ -191,50 +195,22 @@ const cartStore = useCartStore()
 const favoriteStore = useFavoriteStore()
 const notificationStore = useNotificationStore()
 
-const user = {
-  name: 'Cliente Armelin',
-  email: 'cliente@exemplo.com',
-  phone: '(51) 99999-0000',
-  document: '000.000.000-00',
-}
+const user = computed(()=>({...{name:'',email:'',phone:'',document:''},...authState.user}))
+onMounted(async()=>{if(!await loadMe()){router.replace('/login');return}try{const result=await apiFetch('/auth/orders',{headers:{Authorization:'Bearer '+authState.token}});orders.value=result.map(o=>({number:o.number,date:new Date(o.createdAt).toLocaleDateString('pt-BR'),status:({AWAITING_PAYMENT:'Aguardando pagamento',PAID:'Pago',SHIPPED:'Enviado',DELIVERED:'Entregue',CANCELLED:'Cancelado'})[o.status]||o.status,statusClass:o.status==='DELIVERED'?'delivered':'processing',total:new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(o.total),items:(o.items||[]).map(i=>i.quantity+'x '+i.name).join(', ')}))}catch(e){ordersError.value='Não foi possível carregar seus pedidos: '+e.message}})
 
 const address = {
   title: 'Endereço principal',
-  street: 'Rua das Fragrâncias',
-  number: '120',
-  city: 'Porto Alegre/RS',
-  zipCode: '90000-000',
+  street: 'Não cadastrado',
+  number: '—',
+  city: '—',
+  zipCode: '—',
 }
 
-const orders = [
-  {
-    number: 'ARM-204815',
-    date: '15/05/2026',
-    status: 'Entregue',
-    statusClass: 'delivered',
-    total: 'R$ 379,80',
-    items: 'Fine Silk - 100ml, Celtic Legacy - 100ml',
-  },
-  {
-    number: 'ARM-193420',
-    date: '02/05/2026',
-    status: 'Em transporte',
-    statusClass: 'shipping',
-    total: 'R$ 189,90',
-    items: 'Salt Crystal - 100ml',
-  },
-  {
-    number: 'ARM-182901',
-    date: '18/04/2026',
-    status: 'Processando',
-    statusClass: 'processing',
-    total: 'R$ 169,90',
-    items: 'Litchi Fiorito - 100ml',
-  },
-]
+const orders = ref([])
+const ordersError = ref('')
 
 const userInitials = computed(() => {
-  return user.name
+  return (user.value.name || '')
     .split(' ')
     .map((name) => name[0])
     .join('')
@@ -262,14 +238,7 @@ function showMockMessage() {
   )
 }
 
-function logout() {
-  notificationStore.info(
-    'Logout demonstrativo',
-    'Você saiu da conta demonstrativa.',
-  )
-
-  router.push('/login')
-}
+async function logout() { await signOut(); router.push('/login') }
 </script>
 
 <style scoped src="./AccountView.css"></style>

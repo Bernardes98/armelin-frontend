@@ -2,10 +2,10 @@
   <div class="simple-page">
     <section class="simple-page-content">
       <p>Sobre</p>
-      <h1>Armelin Perfumes</h1>
+      <h1>Perfumes</h1>
 
       <span>
-        A Armelin Perfumes nasce com o objetivo de oferecer fragrâncias marcantes, elegantes e
+        A Perfumes nasce com o objetivo de oferecer fragrâncias marcantes, elegantes e
         acessíveis para diferentes estilos e momentos.
       </span>
     </section>

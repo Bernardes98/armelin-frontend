@@ -65,7 +65,9 @@
         </div>
       </div>
 
-      <div v-if="filteredProducts.length > 0" class="products-grid">
+      <div v-if="catalogStatus.loading" role="status" class="empty-products">Carregando perfumes...</div>
+      <div v-else-if="catalogStatus.error" role="alert" class="empty-products"><h2>Catálogo indisponível</h2><p>{{ catalogStatus.error }}</p><button @click="refreshProducts(true)">Tentar novamente</button></div>
+      <div v-else-if="filteredProducts.length > 0" class="products-grid">
         <ProductCard
           v-for="product in filteredProducts"
           :key="product.id"
@@ -89,7 +91,7 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductCard from '../components/product/ProductCard.vue'
-import { products } from '../data/products'
+import { products, catalogStatus, refreshProducts } from '../data/products'
 import { useCartStore } from '../stores/cartStore'
 
 const route = useRoute()
