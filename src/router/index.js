@@ -21,115 +21,30 @@ import ExchangePolicyView from '../views/institutional/ExchangePolicyView.vue'
 import FaqView from '../views/institutional/FaqView.vue'
 import TermsOfUseView from '../views/institutional/TermsOfUseView.vue'
 
-const StoreHome = defineComponent({ name:'StoreHome', setup(){return () => h(storefront.plan === 'ESSENTIAL' ? EssentialLandingView : HomeView)} })
+const StoreHome = defineComponent({
+  name: 'StoreHome',
+  setup() {
+    return () => h(storefront.plan === 'ESSENTIAL' ? EssentialLandingView : HomeView)
+  },
+})
+
 const routes = [
-  {path:'/plataforma',name:'platform',component:PlatformPanel,meta:{title:'Plataforma | Perfumes'}},
-  {path:'/redefinir-senha',component:ResetPasswordView,meta:{title:'Redefinir senha | Perfumes'}},
-  {path: "/admin", name: "admin", component: AdminPanel, meta: {title: "Administração | Perfumes"}},
-  {
-    path: '/',
-    name: 'home',
-    component: StoreHome,
-    meta: {
-      title: 'Perfumes',
-    },
-  },
-  {
-    path: '/produtos',
-    name: 'products',
-    component: ProductsView,
-    meta: {
-      title: 'Produtos | Perfumes',
-    },
-  },
-  {
-    path: '/produtos/:id',
-    name: 'product-details',
-    component: ProductDetailsView,
-    meta: {
-      title: 'Produto | Perfumes',
-    },
-  },
-  {
-    path: '/checkout',
-    name: 'checkout',
-    component: CheckoutView,
-    meta: {
-      title: 'Checkout | Perfumes',
-    },
-  },
-  {
-    path: '/pedido-finalizado/:orderNumber',
-    name: 'order-success',
-    component: OrderSuccessView,
-    meta: {
-      title: 'Pedido finalizado | Perfumes',
-    },
-  },
-  {
-    path: '/sobre',
-    name: 'about',
-    component: AboutView,
-    meta: {
-      title: 'Sobre | Perfumes',
-    },
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: LoginView,
-    meta: {
-      title: 'Login | Perfumes',
-    },
-  },
-  {
-    path: '/minha-conta',
-    name: 'account',
-    component: AccountView,
-    meta: {
-      title: 'Minha Conta | Perfumes',
-    },
-  },
-  {
-    path: '/politica-de-privacidade',
-    name: 'privacy-policy',
-    component: PrivacyPolicyView,
-    meta: {
-      title: 'Política de Privacidade | Perfumes',
-    },
-  },
-  {
-    path: '/termos-de-uso',
-    name: 'terms-of-use',
-    component: TermsOfUseView,
-    meta: {
-      title: 'Termos de Uso | Perfumes',
-    },
-  },
-  {
-    path: '/trocas-e-devolucoes',
-    name: 'exchange-policy',
-    component: ExchangePolicyView,
-    meta: {
-      title: 'Trocas e Devoluções | Perfumes',
-    },
-  },
-  {
-    path: '/perguntas-frequentes',
-    name: 'faq',
-    component: FaqView,
-    meta: {
-      title: 'Perguntas Frequentes | Perfumes',
-    },
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'not-found',
-    component: NotFoundView,
-    meta: {
-      title: 'Página não encontrada | Perfumes',
-    },
-  },
+  { path: '/plataforma', name: 'platform', component: PlatformPanel, meta: { title: 'Plataforma | Perfumes' } },
+  { path: '/redefinir-senha', component: ResetPasswordView, meta: { title: 'Redefinir senha | Perfumes' } },
+  { path: '/admin', name: 'admin', component: AdminPanel, meta: { title: 'Administração | Perfumes' } },
+  { path: '/', name: 'home', component: StoreHome, meta: { title: 'Perfumes' } },
+  { path: '/produtos', name: 'products', component: ProductsView, meta: { title: 'Produtos | Perfumes' } },
+  { path: '/produtos/:id', name: 'product-details', component: ProductDetailsView, meta: { title: 'Produto | Perfumes' } },
+  { path: '/checkout', name: 'checkout', component: CheckoutView, meta: { title: 'Checkout | Perfumes' } },
+  { path: '/pedido-finalizado/:orderNumber', name: 'order-success', component: OrderSuccessView, meta: { title: 'Pedido finalizado | Perfumes' } },
+  { path: '/sobre', name: 'about', component: AboutView, meta: { title: 'Sobre | Perfumes' } },
+  { path: '/login', name: 'login', component: LoginView, meta: { title: 'Login | Perfumes' } },
+  { path: '/minha-conta', name: 'account', component: AccountView, meta: { title: 'Minha Conta | Perfumes' } },
+  { path: '/politica-de-privacidade', name: 'privacy-policy', component: PrivacyPolicyView, meta: { title: 'Política de Privacidade | Perfumes' } },
+  { path: '/termos-de-uso', name: 'terms-of-use', component: TermsOfUseView, meta: { title: 'Termos de Uso | Perfumes' } },
+  { path: '/trocas-e-devolucoes', name: 'exchange-policy', component: ExchangePolicyView, meta: { title: 'Trocas e Devoluções | Perfumes' } },
+  { path: '/perguntas-frequentes', name: 'faq', component: FaqView, meta: { title: 'Perguntas Frequentes | Perfumes' } },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView, meta: { title: 'Página não encontrada | Perfumes' } },
 ]
 
 const router = createRouter({
@@ -143,10 +58,24 @@ const router = createRouter({
 // O modo Essencial não oferece carrinho, cadastro ou checkout na interface.
 // Esta regra não substitui autorização no backend.
 router.beforeEach((to) => {
-  if (isEssential && (/^\/(produtos|checkout|login|redefinir-senha|minha-conta|pedido-finalizado)(\/|$)/.test(to.path))) return '/'
+  const isEssential = storefront.plan === 'ESSENTIAL'
+  const blockedRoutes = [
+    '/produtos',
+    '/checkout',
+    '/login',
+    '/redefinir-senha',
+    '/minha-conta',
+    '/pedido-finalizado',
+  ]
+  const blocked = blockedRoutes.some(
+    (path) => to.path === path || to.path.startsWith(`${path}/`),
+  )
+  if (isEssential && blocked) return '/'
+  return true
 })
+
 router.afterEach((to) => {
-  document.title = (to.meta.title || storefront.name).replace(/Perfumes/g, storefront.name)
+  document.title = String(to.meta.title || storefront.name).replace(/Perfumes/g, storefront.name)
 })
 
 export default router
