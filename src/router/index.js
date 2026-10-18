@@ -3,6 +3,7 @@ import { storefront, isEssential } from '../config/storefront'
 import EssentialLandingView from '../views/EssentialLandingView.vue'
 
 import AdminPanel from '../views/admin/AdminPanel.vue'
+import PlatformPanel from '../views/platform/PlatformPanel.vue'
 import HomeView from '../views/HomeView.vue'
 import ProductsView from '../views/ProductsView.vue'
 import ProductDetailsView from '../views/ProductDetailsView.vue'
@@ -20,6 +21,7 @@ import FaqView from '../views/institutional/FaqView.vue'
 import TermsOfUseView from '../views/institutional/TermsOfUseView.vue'
 
 const routes = [
+  {path:'/plataforma',name:'platform',component:PlatformPanel,meta:{title:'Plataforma | Perfumes'}},
   {path:'/redefinir-senha',component:ResetPasswordView,meta:{title:'Redefinir senha | Perfumes'}},
   {path: "/admin", name: "admin", component: AdminPanel, meta: {title: "Administração | Perfumes"}},
   {
