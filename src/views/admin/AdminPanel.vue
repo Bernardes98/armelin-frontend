@@ -60,14 +60,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { apiFetch } from '../../services/api'
-const auth=ref(sessionStorage.getItem('armelin_admin_auth')||'')
+import { storeSlug } from '../../config/storefront'
+const ADMIN_KEY = `perfumes-${storeSlug}-admin-auth`
+const auth=ref(sessionStorage.getItem(ADMIN_KEY)||'')
 const authenticated=ref(false), username=ref(''),password=ref(''),busy=ref(false),saving=ref(false),error=ref(''),tab=ref('dashboard'),stats=ref({}),products=ref([]),orders=ref([]),editing=ref(false),form=ref({})
 const money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(n||0))
 const date=d=>d?new Date(d).toLocaleString('pt-BR'):'—'
 const statusLabel=s=>({PAID:'Pago',AWAITING_PAYMENT:'Aguardando pagamento',CANCELLED:'Cancelado',SHIPPED:'Enviado',DELIVERED:'Entregue'})[s]||s
 async function request(path,options={}) { return apiFetch('/admin'+path,{...options,headers:{...options.headers,Authorization:'Basic '+auth.value}}) }
-async function login(){error.value='';busy.value=true;const credentials=btoa(unescape(encodeURIComponent(username.value+':'+password.value)));auth.value=credentials;try{await request('/me');sessionStorage.setItem('armelin_admin_auth',credentials);authenticated.value=true;password.value='';await load()}catch(e){auth.value='';error.value='Credenciais inválidas ou API indisponível.'}finally{busy.value=false}}
-function logout(){sessionStorage.removeItem('armelin_admin_auth');auth.value='';authenticated.value=false;username.value='';password.value='';error.value=''}
+async function login(){error.value='';busy.value=true;const credentials=btoa(unescape(encodeURIComponent(username.value+':'+password.value)));auth.value=credentials;try{await request('/me');sessionStorage.setItem(ADMIN_KEY,credentials);authenticated.value=true;password.value='';await load()}catch(e){auth.value='';error.value='Credenciais inválidas ou API indisponível.'}finally{busy.value=false}}
+function logout(){sessionStorage.removeItem(ADMIN_KEY);auth.value='';authenticated.value=false;username.value='';password.value='';error.value=''}
 async function load(){if(!authenticated.value)return;error.value='';busy.value=true;try{if(tab.value==='dashboard')stats.value=await request('/dashboard');if(tab.value==='products')products.value=await request('/products');if(tab.value==='orders')orders.value=await request('/orders')}catch(e){error.value=e.message;if(/401|403/.test(e.message))logout()}finally{busy.value=false}}
 function newProduct(){form.value={name:'',volume:'',subtitle:'',price:0,oldPrice:null,stock:0,category:'',gender:'',family:'',image:'',description:'',active:true};error.value='';editing.value=true}
 function editProduct(p){form.value={...p};error.value='';editing.value=true}

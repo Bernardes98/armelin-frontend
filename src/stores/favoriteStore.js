@@ -1,7 +1,8 @@
+import { storeSlug } from '../config/storefront'
 import { defineStore } from 'pinia'
 import { useNotificationStore } from './notificationStore'
 
-const FAVORITES_STORAGE_KEY = 'armelin-favorites'
+const FAVORITES_STORAGE_KEY = `perfumes-${storeSlug}-favorites`
 
 function loadFavoriteIds() {
   const storedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY)

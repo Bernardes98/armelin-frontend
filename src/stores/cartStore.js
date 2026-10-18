@@ -1,7 +1,8 @@
+import { storeSlug } from '../config/storefront'
 import { defineStore } from 'pinia'
 import { useNotificationStore } from './notificationStore'
 
-const CART_STORAGE_KEY = 'armelin-cart'
+const CART_STORAGE_KEY = `perfumes-${storeSlug}-cart`
 
 function loadCartItems() {
   const storedItems = localStorage.getItem(CART_STORAGE_KEY)

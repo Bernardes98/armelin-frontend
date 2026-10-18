@@ -1,5 +1,6 @@
 // Configuração por implantação. Nunca coloque segredos em variáveis VITE_*.
 const env = import.meta.env
+export const storeSlug = String(env.VITE_STORE_SLUG || 'default').trim().toLowerCase()
 export const storefront = Object.freeze({
   plan: String(env.VITE_STORE_PLAN || 'COMMERCE').toUpperCase() === 'ESSENTIAL' ? 'ESSENTIAL' : 'COMMERCE',
   name: (env.VITE_STORE_NAME || 'Perfumes').trim(),
