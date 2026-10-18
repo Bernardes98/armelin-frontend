@@ -6,6 +6,7 @@
         <button :class="{ selected: tab==='dashboard' }" @click="tab='dashboard';load()">Visão geral</button>
         <button :class="{ selected: tab==='products' }" @click="tab='products';load()">Perfumes e estoque</button>
         <button :class="{ selected: tab==='orders' }" @click="tab='orders';load()">Pedidos</button>
+        <button :class="{ selected: tab==='brand' }" @click="tab='brand';load()">Identidade visual</button>
         <button class="logout" @click="logout">Sair</button>
       </template>
       <RouterLink to="/">← Voltar à loja</RouterLink>
@@ -22,7 +23,7 @@
         </form>
       </div>
       <template v-else>
-        <header class="admin-heading"><div><span>PAINEL DE CONTROLE</span><h1>{{tab==='dashboard'?'Visão geral':tab==='products'?'Gestão de perfumes':'Pedidos recebidos'}}</h1></div><button class="secondary" @click="load">Atualizar</button></header>
+        <header class="admin-heading"><div><span>PAINEL DE CONTROLE</span><h1>{{tab==='dashboard'?'Visão geral':tab==='products'?'Gestão de perfumes':tab==='brand'?'Identidade visual':'Pedidos recebidos'}}</h1></div><button class="secondary" @click="load">Atualizar</button></header>
         <p v-if="error" class="admin-error" role="alert">{{error}}</p>
         <p v-if="busy">Carregando informações...</p>
         <template v-if="tab==='dashboard'">
@@ -52,6 +53,22 @@
             <label class="inline"><input v-model="form.active" type="checkbox" /> Disponível na loja</label>
           </div><p class="admin-error" v-if="error" role="alert">{{error}}</p><button type="submit" :disabled="saving">{{saving?'Salvando...':'Salvar perfume'}}</button></form></div>
         </template>
+        <template v-if="tab==='brand'">
+          <form class="panel admin-editor" style="position:static;max-width:740px;" @submit.prevent="saveBrand">
+            <h2>Personalização da loja</h2>
+            <div class="admin-fields">
+              <label>Nome da loja<input v-model.trim="brand.name" maxlength="255" required /></label>
+              <label>Cor principal<input v-model="brand.accent" type="color" /></label>
+              <label>WhatsApp<input v-model.trim="brand.whatsapp" /></label>
+              <label>Instagram<input v-model.trim="brand.instagram" /></label>
+              <label>URL do logo<input v-model.trim="brand.logoUrl" type="url" placeholder="https://..." /></label>
+              <label>URL da imagem principal<input v-model.trim="brand.heroImageUrl" type="url" placeholder="https://..." /></label>
+              <label class="wide">Título principal<input v-model.trim="brand.heroTitle" maxlength="255" /></label>
+              <label class="wide">Descrição<textarea v-model.trim="brand.heroDescription" rows="3" maxlength="2000"></textarea></label>
+            </div>
+            <button :disabled="saving">{{saving?'Salvando...':'Salvar identidade visual'}}</button>
+          </form>
+        </template>
         <template v-if="tab==='orders'"><div class="panel admin-table-wrap"><table><thead><tr><th>Nº pedido</th><th>Cliente</th><th>Data</th><th>Itens</th><th>Valor</th><th>Pagamento / envio</th></tr></thead><tbody><tr v-for="o in orders" :key="o.id"><td><b>{{o.number}}</b></td><td>{{o.customerName}}<small>{{o.customerEmail}}</small></td><td>{{date(o.createdAt)}}</td><td><details><summary>{{o.items?.length || 0}} itens</summary><p v-for="item in o.items" :key="item.id">{{item.quantity}}x {{item.name}} ({{item.volume}})</p><p>Entrega: {{o.address}}, {{o.addressNumber}} — {{o.city}} / {{o.zipCode}}</p></details></td><td>{{money(o.total)}}</td><td><span class="status" :class="o.status">{{statusLabel(o.status)}}</span> <button v-if="o.status==='PAID' || o.status==='SHIPPED'" class="secondary" @click="advanceOrder(o)">{{o.status==='PAID'?'Marcar enviado':'Marcar entregue'}}</button></td></tr><tr v-if="!orders.length"><td colspan="6">Nenhum pedido encontrado.</td></tr></tbody></table></div></template>
       </template>
     </section>
@@ -63,14 +80,18 @@ import { apiFetch } from '../../services/api'
 import { storeSlug } from '../../config/storefront'
 const ADMIN_KEY = `perfumes-${storeSlug}-admin-auth`
 const auth=ref(sessionStorage.getItem(ADMIN_KEY)||'')
-const authenticated=ref(false), username=ref(''),password=ref(''),busy=ref(false),saving=ref(false),error=ref(''),tab=ref('dashboard'),stats=ref({}),products=ref([]),orders=ref([]),editing=ref(false),form=ref({})
+const authenticated=ref(false), username=ref(''),password=ref(''),busy=ref(false),saving=ref(false),error=ref(''),tab=ref('dashboard'),stats=ref({}),products=ref([]),orders=ref([]),editing=ref(false),form=ref({}),brand=ref({})
 const money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(n||0))
 const date=d=>d?new Date(d).toLocaleString('pt-BR'):'—'
 const statusLabel=s=>({PAID:'Pago',AWAITING_PAYMENT:'Aguardando pagamento',CANCELLED:'Cancelado',SHIPPED:'Enviado',DELIVERED:'Entregue'})[s]||s
 async function request(path,options={}) { return apiFetch('/admin'+path,{...options,headers:{...options.headers,Authorization:'Basic '+auth.value}}) }
 async function login(){error.value='';busy.value=true;const credentials=btoa(unescape(encodeURIComponent(username.value+':'+password.value)));auth.value=credentials;try{await request('/me');sessionStorage.setItem(ADMIN_KEY,credentials);authenticated.value=true;password.value='';await load()}catch(e){auth.value='';error.value='Credenciais inválidas ou API indisponível.'}finally{busy.value=false}}
 function logout(){sessionStorage.removeItem(ADMIN_KEY);auth.value='';authenticated.value=false;username.value='';password.value='';error.value=''}
-async function load(){if(!authenticated.value)return;error.value='';busy.value=true;try{if(tab.value==='dashboard')stats.value=await request('/dashboard');if(tab.value==='products')products.value=await request('/products');if(tab.value==='orders')orders.value=await request('/orders')}catch(e){error.value=e.message;if(/401|403/.test(e.message))logout()}finally{busy.value=false}}
+async function load(){if(!authenticated.value)return;error.value='';busy.value=true;try{if(tab.value==='dashboard')stats.value=await request('/dashboard');if(tab.value==='products')products.value=await request('/products');if(tab.value==='orders')orders.value=await request('/orders');if(tab.value==='brand')brand.value=await request('/brand')}catch(e){error.value=e.message;if(/401|403/.test(e.message))logout()}finally{busy.value=false}}
+async function saveBrand(){saving.value=true;error.value='';try{
+ const payload={...brand.value};delete payload.id;delete payload.slug;delete payload.plan;
+ await request('/brand',{method:'PUT',body:JSON.stringify(payload)});await load();
+ }catch(e){error.value=e.message}finally{saving.value=false}}
 function newProduct(){form.value={name:'',volume:'',subtitle:'',price:0,oldPrice:null,stock:0,category:'',gender:'',family:'',image:'',description:'',active:true};error.value='';editing.value=true}
 function editProduct(p){form.value={...p};error.value='';editing.value=true}
 async function saveProduct(){error.value='';saving.value=true;try{const id=form.value.id;await request(id?'/products/'+id:'/products',{method:id?'PUT':'POST',body:JSON.stringify(form.value)});editing.value=false;await load()}catch(e){error.value=e.message}finally{saving.value=false}}

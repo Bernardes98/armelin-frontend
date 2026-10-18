@@ -16,7 +16,7 @@
 
 <script setup>
 import Header from './components/layout/Header.vue'
-import { storefront, isEssential } from './config/storefront'
+import { storefront } from './config/storefront'
 import Footer from './components/layout/Footer.vue'
 import CartDrawer from './components/layout/CartDrawer.vue'
 import ToastContainer from './components/ui/ToastContainer.vue'
@@ -26,7 +26,8 @@ import { useCartStore } from './stores/cartStore'
 
 const cartStore = useCartStore()
 const route = useRoute()
-const isAdmin = computed(() => route.path.startsWith('/admin'))
+const isAdmin = computed(() => route.path.startsWith('/admin') || route.path.startsWith('/plataforma'))
+const isEssential = computed(() => storefront.plan === 'ESSENTIAL')
 // A configuração visual é por implantação; não representa isolamento multiempresa.
 if (typeof document !== 'undefined') { document.documentElement.style.setProperty('--store-accent', storefront.accent) }
 </script>

@@ -1,13 +1,13 @@
 <template>
   <div class="essential">
     <header class="essential__header">
-      <RouterLink to="/" class="essential__logo">{{ storefront.name }}</RouterLink>
+      <RouterLink to="/" class="essential__logo"><img v-if="storefront.logoUrl" :src="storefront.logoUrl" :alt="storefront.name" style="max-height:52px;max-width:180px;object-fit:contain" /><span v-else>{{ storefront.name }}</span></RouterLink>
       <nav aria-label="Navegação principal">
         <a href="#sobre">A loja</a><a href="#destaques">Destaques</a><a href="#contato">Contato</a>
       </nav>
     </header>
     <main>
-      <section class="essential__hero">
+      <section class="essential__hero" :style="storefront.heroImageUrl?{backgroundImage:`linear-gradient(#0008,#0008), url(${storefront.heroImageUrl})`,backgroundSize:'cover',backgroundPosition:'center'}:{}">
         <p class="essential__eyebrow">Bem-vindo à {{ storefront.name }}</p>
         <h1>{{ storefront.tagline }}</h1>
         <p>{{ storefront.description }}</p>

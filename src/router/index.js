@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { storefront, isEssential } from '../config/storefront'
+import { storefront } from '../config/storefront'
+import { defineComponent, h } from 'vue'
 import EssentialLandingView from '../views/EssentialLandingView.vue'
 
 import AdminPanel from '../views/admin/AdminPanel.vue'
@@ -20,6 +21,7 @@ import ExchangePolicyView from '../views/institutional/ExchangePolicyView.vue'
 import FaqView from '../views/institutional/FaqView.vue'
 import TermsOfUseView from '../views/institutional/TermsOfUseView.vue'
 
+const StoreHome = defineComponent({ name:'StoreHome', setup(){return () => h(storefront.plan === 'ESSENTIAL' ? EssentialLandingView : HomeView)} })
 const routes = [
   {path:'/plataforma',name:'platform',component:PlatformPanel,meta:{title:'Plataforma | Perfumes'}},
   {path:'/redefinir-senha',component:ResetPasswordView,meta:{title:'Redefinir senha | Perfumes'}},
@@ -27,7 +29,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: isEssential ? EssentialLandingView : HomeView,
+    component: StoreHome,
     meta: {
       title: 'Perfumes',
     },
