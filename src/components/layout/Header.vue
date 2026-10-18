@@ -17,7 +17,7 @@
       </button>
 
       <RouterLink to="/" class="brand" @click="closeAllMenus">
-        <span class="brand-main">PERFUMES</span>
+        <span class="brand-main">{{ storefront.name }}</span>
         
       </RouterLink>
 
@@ -135,7 +135,7 @@
         <aside class="mobile-menu-panel">
           <div class="mobile-menu-header">
             <RouterLink to="/" class="mobile-menu-logo" @click="closeMobileMenu">
-              <span>PERFUMES</span>
+              <span>{{ storefront.name }}</span>
               <small>Perfumes</small>
             </RouterLink>
 
@@ -235,6 +235,7 @@
 
 <script setup>
 import { authState } from '../../services/auth'
+import { storefront } from '../../config/storefront'
 
 import { onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'

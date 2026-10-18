@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { storefront, isEssential } from '../config/storefront'
+import EssentialLandingView from '../views/EssentialLandingView.vue'
 
 import AdminPanel from '../views/admin/AdminPanel.vue'
 import HomeView from '../views/HomeView.vue'
@@ -23,7 +25,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView,
+    component: isEssential ? EssentialLandingView : HomeView,
     meta: {
       title: 'Perfumes',
     },
@@ -134,8 +136,13 @@ const router = createRouter({
   },
 })
 
+// O modo Essencial não oferece carrinho, cadastro ou checkout na interface.
+// Esta regra não substitui autorização no backend.
+router.beforeEach((to) => {
+  if (isEssential && (/^\/(produtos|checkout|login|redefinir-senha|minha-conta|pedido-finalizado)(\/|$)/.test(to.path))) return '/'
+})
 router.afterEach((to) => {
-  document.title = to.meta.title || 'Perfumes'
+  document.title = (to.meta.title || storefront.name).replace(/Perfumes/g, storefront.name)
 })
 
 export default router

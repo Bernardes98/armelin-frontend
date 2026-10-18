@@ -20,7 +20,7 @@
     <section class="footer-main">
       <div class="footer-brand">
         <RouterLink to="/" class="footer-logo">
-          <span class="footer-logo-main">PERFUMES</span>
+          <span class="footer-logo-main">{{ storefront.name }}</span>
           
         </RouterLink>
 
@@ -81,10 +81,11 @@
         <strong>09h às 18h</strong>
 
         <span>E-mail</span>
-        <strong>contato@armelinperfumes.com.br</strong>
+        <strong>Consulte nossos canais oficiais</strong>
 
         <span>WhatsApp</span>
-        <strong>(00) 00000-0000</strong>
+        <a v-if="storefront.whatsapp" :href="whatsappLink()" target="_blank" rel="noopener noreferrer">Fale conosco</a>
+        <span v-else>Consulte nossos canais oficiais</span>
       </div>
     </section>
 
@@ -114,7 +115,7 @@
 
     <section class="footer-bottom">
       <p>
-        © {{ currentYear }} Perfumes. Todos os direitos reservados.
+        © {{ currentYear }} {{ storefront.name }}. Todos os direitos reservados.
       </p>
 
       <span>
@@ -126,6 +127,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { storefront, whatsappLink } from '../../config/storefront'
 import { useNotificationStore } from '../../stores/notificationStore'
 
 const email = ref('')
