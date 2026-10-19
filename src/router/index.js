@@ -6,6 +6,7 @@ import PublicStoreView from '../views/PublicStoreView.vue'
 import KasDemoView from '../views/KasDemoView.vue'
 import PortoDemoView from '../views/PortoDemoView.vue'
 import DudaDemoView from '../views/DudaDemoView.vue'
+import Closet051DemoView from '../views/Closet051DemoView.vue'
 
 import AdminPanel from '../views/admin/AdminPanel.vue'
 import PlatformPanel from '../views/platform/PlatformPanel.vue'
@@ -33,6 +34,7 @@ const StoreHome = defineComponent({
 })
 
 const routes = [
+  { path: '/demo/closet051', name: 'closet051-demo', component: Closet051DemoView, meta: { title: 'Closet 051 | Demonstração' } },
   { path: '/demo/duda-piucco', name: 'duda-demo', component: DudaDemoView, meta: { title: 'Duda Piucco Sweet | Demonstração' } },
   { path: '/demo/porto', name: 'porto-demo', component: PortoDemoView, meta: { title: 'Porto Perfumaria | Demonstração' } },
   { path: '/demo/kas', name: 'kas-demo', component: KasDemoView, meta: { title: 'Ka’s Perfumaria | Demonstração' } },

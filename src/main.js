@@ -18,7 +18,7 @@ app.use(router)
 app.mount('#app')
 
 // Demonstracoes independentes usam dados ilustrativos locais e nao dependem da API.
-const isIndependentDemo = ['/demo/kas', '/demo/porto', '/demo/duda-piucco'].includes(window.location.pathname.replace(/\/$/, ''))
+const isIndependentDemo = ['/demo/kas', '/demo/porto', '/demo/duda-piucco', '/demo/closet051'].includes(window.location.pathname.replace(/\/$/, ''))
 
 if (!isIndependentDemo) {
   // A configuracao publica da loja e carregada sem bloquear a renderizacao.
