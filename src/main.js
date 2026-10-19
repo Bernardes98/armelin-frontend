@@ -17,10 +17,10 @@ app.use(router)
 // Isso evita tela branca quando a API esta iniciando (por exemplo, no Render).
 app.mount('#app')
 
-// A demonstracao da Ka's usa dados ilustrativos locais e nao depende da API.
-const isKasDemo = window.location.pathname.replace(/\/$/, '') === '/demo/kas'
+// Demonstracoes independentes usam dados ilustrativos locais e nao dependem da API.
+const isIndependentDemo = ['/demo/kas', '/demo/porto'].includes(window.location.pathname.replace(/\/$/, ''))
 
-if (!isKasDemo) {
+if (!isIndependentDemo) {
   // A configuracao publica da loja e carregada sem bloquear a renderizacao.
   apiFetch('/storefront/config')
     .then((config) => {

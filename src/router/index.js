@@ -4,6 +4,7 @@ import { defineComponent, h } from 'vue'
 import EssentialLandingView from '../views/EssentialLandingView.vue'
 import PublicStoreView from '../views/PublicStoreView.vue'
 import KasDemoView from '../views/KasDemoView.vue'
+import PortoDemoView from '../views/PortoDemoView.vue'
 
 import AdminPanel from '../views/admin/AdminPanel.vue'
 import PlatformPanel from '../views/platform/PlatformPanel.vue'
@@ -31,6 +32,7 @@ const StoreHome = defineComponent({
 })
 
 const routes = [
+  { path: '/demo/porto', name: 'porto-demo', component: PortoDemoView, meta: { title: 'Porto Perfumaria | Demonstração' } },
   { path: '/demo/kas', name: 'kas-demo', component: KasDemoView, meta: { title: 'Ka’s Perfumaria | Demonstração' } },
   { path: '/loja/:slug', name: 'public-store', component: PublicStoreView, meta: { title: 'Loja | Perfumes' } },
   { path: '/plataforma', name: 'platform', component: PlatformPanel, meta: { title: 'Plataforma | Perfumes' } },
