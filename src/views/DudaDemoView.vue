@@ -25,7 +25,22 @@
           <div class="duda-sticker">feito pra<br><strong>ser feliz!</strong><span>✳</span></div>
         </div>
       </section>
-      <div class="duda-marquee" aria-hidden="true"><div>✳ UM DOCE NUNCA É SÓ UM DOCE &nbsp; ✳ &nbsp; É UM MOMENTO ESPECIAL &nbsp; ✳ &nbsp; UM DOCE NUNCA É SÓ UM DOCE &nbsp; ✳ &nbsp; É UM MOMENTO ESPECIAL &nbsp; ✳</div></div>
+      <div class="duda-marquee" aria-hidden="true">
+        <div class="duda-marquee-track">
+          <div class="duda-marquee-group">
+            <span>✳ &nbsp; UM DOCE NUNCA É SÓ UM DOCE</span>
+            <span>✳ &nbsp; É UM MOMENTO ESPECIAL</span>
+            <span>✳ &nbsp; UM DOCE NUNCA É SÓ UM DOCE</span>
+            <span>✳ &nbsp; É UM MOMENTO ESPECIAL</span>
+          </div>
+          <div class="duda-marquee-group">
+            <span>✳ &nbsp; UM DOCE NUNCA É SÓ UM DOCE</span>
+            <span>✳ &nbsp; É UM MOMENTO ESPECIAL</span>
+            <span>✳ &nbsp; UM DOCE NUNCA É SÓ UM DOCE</span>
+            <span>✳ &nbsp; É UM MOMENTO ESPECIAL</span>
+          </div>
+        </div>
+      </div>
       <section id="sabores" class="duda-products section-wrap">
         <div class="duda-section-head"><div><p class="duda-kicker">NOSSO UNIVERSO DE SABORES</p><h2>Amor à<br><em>primeira mordida.</em></h2></div><p>Da vontade de um docinho à celebração especial. Descubra algumas das delícias do nosso cardápio.</p></div>
         <div class="duda-tabs" role="group" aria-label="Filtrar produtos"><button v-for="category in categories" :key="category" type="button" :class="{active: selectedCategory === category}" @click="selectedCategory=category">{{category}}</button></div>
