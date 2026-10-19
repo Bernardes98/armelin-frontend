@@ -3,3 +3,46 @@
 @media(max-width:1000px){.kas-header nav{gap:16px}.kas-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kas-hero-copy{padding-left:7%}.kas-hero{grid-template-columns:55% 45%}.kas-ticker{gap:22px}}
 @media(max-width:680px){.kas-notice{justify-content:center;text-align:center}.kas-notice span:last-child{display:none}.kas-header{height:78px}.kas-header nav{display:none;position:absolute;top:78px;left:0;right:0;background:#faf9f5;padding:25px;box-shadow:0 12px 25px #0001;flex-direction:column}.kas-header nav.kas-nav--open{display:flex}.kas-menu{display:block}.kas-hero{display:flex;flex-direction:column-reverse}.kas-hero-image{min-height:340px}.kas-hero-copy{padding:50px 23px 30px}.kas-hero h1{font-size:clamp(43px,11vw,65px);margin:23px 0 15px}.kas-hero-foot{padding-top:30px}.kas-image-tag{font-size:19px;right:20px;bottom:20px}.kas-ticker{justify-content:flex-start}.kas-feature{grid-template-columns:1fr;padding:65px 24px;gap:12px}.kas-collection{padding:65px 16px}.kas-section-heading{display:block}.kas-section-aside{display:block;margin-top:12px}.kas-grid{gap:12px}.kas-product-image{height:230px}.kas-product-info{display:block}.kas-product-info h3{font-size:20px}.kas-product-info strong{display:block;margin:8px 0}.kas-quick-add{opacity:1;transform:none;bottom:9px;left:9px;right:9px;padding:11px 5px;font-size:10px}.kas-search{width:100%;margin:10px 0 0}.kas-search input{flex:1}.kas-editorial{grid-template-columns:1fr}.kas-editorial-image{min-height:300px}.kas-editorial-content{padding:65px 24px}.kas-contact{padding:75px 23px}.kas-footer{flex-wrap:wrap;justify-content:center;text-align:center}}
 @media(prefers-reduced-motion:reduce){.kas-demo *{scroll-behavior:auto!important;transition:none!important}}
+
+/* Identidade Ka’s: preto, dourado e atmosfera premium. */
+.kas-demo{--ink:#17130e;--taupe:#b5a786;--cream:#121110;--sand:#1b1916;--accent:#d8b85e;background:#141210;color:#f5eedb}
+.kas-demo em{color:#d6b45b}
+.kas-notice{background:#090909;color:#d9ba69;border-bottom:1px solid #46361d}
+.kas-header{background:#11100e;border-bottom:1px solid #3d3325}
+.kas-logo,.kas-header nav a,.kas-bag{color:#e0bd65}
+.kas-logo span{font-size:40px;letter-spacing:-2px}
+.kas-header nav a:hover,.kas-text-link:hover{color:#fff2b7}
+.kas-bag span{background:#d9b75e;color:#100e0c}
+.kas-hero{background:radial-gradient(circle at 35% 45%,#292117,#0e0e0e 72%)}
+.kas-hero-copy>p,.kas-feature>p,.kas-contact p{color:#d5cbb5}
+.kas-hero-image{background-image:linear-gradient(0deg,rgba(0,0,0,.5),transparent 70%),url('https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=1300&q=85')}
+.kas-eyebrow,.kas-hero-foot,.kas-section-aside{color:#d8b961}
+.kas-button--dark{background:#d9b860;color:#14110b}
+.kas-button--dark:hover{background:#f0d88d}
+.kas-ticker{background:#d6b45d;color:#18130c;font-weight:700}
+.kas-ticker b{color:#573d0f}
+.kas-benefits{background:#0d0c0b;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;border-bottom:1px solid #3d3528}
+.kas-benefits>div{padding:28px 15px;text-align:center;border-right:1px solid #3d3528;display:flex;flex-direction:column;gap:8px}
+.kas-benefits strong{font:400 22px 'Playfair Display',serif;color:#e4c36e}
+.kas-benefits span{font-size:11px;color:#b9ad94}
+.kas-categories{padding:85px max(6vw,24px) 95px;background:#171411}
+.kas-category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.kas-category{position:relative;min-height:310px;border:1px solid #57472a;color:#fff;background:linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.12)),var(--category-photo) center/cover;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:12px;padding:22px;text-align:left;overflow:hidden}
+.kas-category:hover{border-color:#e1c478;filter:brightness(1.15)}
+.kas-category span{font-size:10px;letter-spacing:2px;color:#f3d48a}
+.kas-category strong{font:400 30px 'Playfair Display',serif}
+.kas-feature{background:#100f0d}
+.kas-collection{background:#1d1a16}
+.kas-filters>button{border-color:#655331;color:#e0d4be}
+.kas-filters>button.active,.kas-filters>button:hover{background:#d9b75e;color:#14110b;border-color:#d9b75e}
+.kas-search{border-bottom-color:#8b7750}.kas-search input{color:#fff}
+.kas-product-image{background:#eee7dd!important}
+.kas-product-category{background:#18140de8;color:#e9c974}
+.kas-quick-add{background:#d7b45e;color:#17100b}
+.kas-product-info p,.kas-disclaimer{color:#b8ac95}
+.kas-editorial{background:#0b0a09}.kas-editorial p{color:#dacfb9}
+.kas-contact{background:#16130f}.kas-footer{background:#0b0a09;color:#bfb18f;border-top:1px solid #3d3325}
+.kas-footer .kas-logo{color:#d6b45e}
+.kas-drawer{background:#16130f;color:#f5ead1}.kas-demo-alert{background:#33291a;color:#e6c680}.kas-empty{color:#c2b18c}.kas-bag-item{border-bottom-color:#50412a}.kas-bag-item div span{color:#e0c887}.kas-bag-item button{color:#e1c476}
+@media(max-width:800px){.kas-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}.kas-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.kas-header nav.kas-nav--open{background:#17130e}.kas-categories{padding:60px 16px}.kas-category-grid{gap:9px}.kas-category{min-height:230px;padding:15px}.kas-category strong{font-size:24px}.kas-benefits>div{padding:22px 9px}.kas-benefits strong{font-size:19px}}
