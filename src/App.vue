@@ -1,14 +1,14 @@
 <template>
   <div class="app">
-    <Header v-if="!isAdmin && !isEssential" :cart-count="cartStore.totalItems" @open-cart="cartStore.openCart" />
+    <Header v-if="!isAdmin && !isEssential && !isPublicStore" :cart-count="cartStore.totalItems" @open-cart="cartStore.openCart" />
 
     <main class="main-content">
       <RouterView />
     </main>
 
-    <Footer v-if="!isAdmin && !isEssential" />
+    <Footer v-if="!isAdmin && !isEssential && !isPublicStore" />
 
-    <CartDrawer v-if="!isAdmin && !isEssential" />
+    <CartDrawer v-if="!isAdmin && !isEssential && !isPublicStore" />
 
     <ToastContainer />
   </div>
@@ -26,6 +26,7 @@ import { useCartStore } from './stores/cartStore'
 
 const cartStore = useCartStore()
 const route = useRoute()
+const isPublicStore = computed(() => route.path.startsWith('/loja/'))
 const isAdmin = computed(() => route.path.startsWith('/admin') || route.path.startsWith('/plataforma'))
 const isEssential = computed(() => storefront.plan === 'ESSENTIAL')
 // A configuração visual é por implantação; não representa isolamento multiempresa.

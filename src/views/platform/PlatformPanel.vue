@@ -13,9 +13,9 @@
       <div class="toolbar"><h2>{{ companies.length }} lojas cadastradas</h2><div><button @click="startCreate">+ Nova loja</button><button class="secondary" @click="logout">Sair</button></div></div>
       <div v-if="busy">Carregando...</div>
       <div class="table-wrap"><table><thead><tr><th>Loja</th><th>Plano</th><th>Situação</th><th></th></tr></thead><tbody>
-        <tr v-for="c in companies" :key="c.id"><td><strong>{{ c.name }}</strong><small>{{ c.slug }}</small></td><td>{{ c.plan==='ESSENTIAL'?'Essencial':'Commerce' }}</td><td>{{ c.active?'Ativa':'Suspensa' }}</td><td><button class="secondary" @click="startEdit(c)">Editar</button> <button class="secondary" @click="startOwner(c)">Acesso</button></td></tr>
+        <tr v-for="c in companies" :key="c.id"><td><strong>{{ c.name }}</strong><small>{{ c.slug }}</small></td><td>{{ c.plan==='ESSENTIAL'?'Essencial':'Commerce' }}</td><td>{{ c.active?'Ativa':'Suspensa' }}</td><td><a v-if="c.active && c.plan === 'ESSENTIAL'" class="store-preview-link" :href="`/loja/${c.slug}`" target="_blank" rel="noopener noreferrer">Ver site</a> <button class="secondary" @click="startEdit(c)">Editar</button> <button class="secondary" @click="startOwner(c)">Acesso</button></td></tr>
       </tbody></table></div>
-      <p class="notice">Nesta etapa, novas lojas não têm painel próprio nem checkout habilitado. O identificador da loja é permanente.</p>
+      <p class="notice">Lojas Essencial têm link público individual. O checkout Commerce de novas empresas permanece desabilitado até configurar pagamentos individuais.</p>
     </section>
     <section v-if="ownerEditing" class="modal" @click.self="ownerEditing=false"><form class="panel editor" @submit.prevent="saveOwner">
       <h2>Administrador — {{ownerCompany.name}}</h2>
