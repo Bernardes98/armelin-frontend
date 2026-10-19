@@ -26,7 +26,7 @@ import { useCartStore } from './stores/cartStore'
 
 const cartStore = useCartStore()
 const route = useRoute()
-const isPublicStore = computed(() => route.path.startsWith('/loja/') || ['/demo/kas', '/demo/porto'].includes(route.path))
+const isPublicStore = computed(() => route.path.startsWith('/loja/') || ['/demo/kas', '/demo/porto', '/demo/duda-piucco'].includes(route.path))
 const isAdmin = computed(() => route.path.startsWith('/admin') || route.path.startsWith('/plataforma'))
 const isEssential = computed(() => storefront.plan === 'ESSENTIAL')
 // A configuração visual é por implantação; não representa isolamento multiempresa.
