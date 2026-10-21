@@ -16,6 +16,7 @@
           <h2>Pedido {{ paymentResult.orderNumber }}</h2>
           <p v-if="paymentStatus === 'PAID'">Pagamento confirmado! Obrigado pela compra.</p>
           <p v-else>Pagamento aguardando confirmação. Não efetue outra cobrança para este pedido.</p>
+          <p v-if="paymentStatus !== 'PAID' && automaticChecksLeft > 0" class="payment-hint" role="status">Verificando automaticamente o pagamento…</p>
           <template v-if="paymentResult.pixQrCode">
             <p>Abra o aplicativo do banco e leia o QR Code ou copie o Pix:</p>
             <img v-if="paymentResult.pixQrCodeBase64" class="pix-image" :src="`data:image/png;base64,${paymentResult.pixQrCodeBase64}`" alt="QR Code Pix para pagar este pedido" />
@@ -89,7 +90,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, nextTick, onBeforeUnmount } from 'vue'
+import { computed, reactive, ref, nextTick, onBeforeUnmount, watch } from 'vue'
 import { apiFetch } from '../services/api'
 import { useCartStore } from '../stores/cartStore'
 
@@ -105,6 +106,11 @@ const cardVisible = ref(false)
 const paymentResult = ref(null)
 const paymentStatus = ref('')
 const checkingStatus = ref(false)
+const automaticChecksLeft = ref(0)
+const STATUS_CHECK_INTERVAL_MS = 8000
+const MAX_AUTOMATIC_CHECKS = 15
+let statusTimer = null
+let destroyed = false
 let brickController = null
 const shippingFee = computed(() => cartStore.totalPrice >= 299 ? 0 : 19.9)
 const orderTotal = computed(() => cartStore.totalPrice + shippingFee.value)
@@ -176,15 +182,53 @@ async function finishOrder() {
   finally { submitting.value = false }
 }
 
-async function refreshPaymentStatus() {
+function stopAutomaticChecks() {
+  if (statusTimer !== null) {
+    clearTimeout(statusTimer)
+    statusTimer = null
+  }
+  automaticChecksLeft.value = 0
+}
+
+// A consulta consulta a cobrança existente. Nunca cria uma nova cobrança.
+function scheduleStatusCheck() {
+  if (destroyed || !paymentResult.value || paymentStatus.value === 'PAID' || automaticChecksLeft.value <= 0) return
+  if (statusTimer !== null) clearTimeout(statusTimer)
+  statusTimer = setTimeout(async () => {
+    statusTimer = null
+    if (destroyed || paymentStatus.value === 'PAID') return
+    // Não disputa a mesma requisição com o botão de consulta manual.
+    if (checkingStatus.value) { scheduleStatusCheck(); return }
+    automaticChecksLeft.value -= 1
+    await refreshPaymentStatus(true)
+    scheduleStatusCheck()
+  }, STATUS_CHECK_INTERVAL_MS)
+}
+
+watch(paymentResult, (result) => {
+  stopAutomaticChecks()
+  if (result && paymentStatus.value !== 'PAID') {
+    automaticChecksLeft.value = MAX_AUTOMATIC_CHECKS
+    scheduleStatusCheck()
+  }
+})
+
+watch(paymentStatus, (status) => {
+  if (status === 'PAID') {
+    stopAutomaticChecks()
+    checkoutError.value = ''
+  }
+})
+
+async function refreshPaymentStatus(silent = false) {
   if (!paymentResult.value || checkingStatus.value) return
   checkingStatus.value = true
   checkoutError.value = ''
   try {
     const result = await apiFetch(`/checkout/transparent/${encodeURIComponent(paymentResult.value.orderNumber)}/status`)
     paymentStatus.value = result.status
-    if (result.status !== 'PAID') checkoutError.value = 'Pagamento ainda não confirmado. Aguarde e consulte novamente.'
-  } catch (error) { checkoutError.value = error.message || 'Não foi possível consultar o pagamento' }
+    if (!silent && result.status !== 'PAID') checkoutError.value = 'Pagamento ainda não confirmado. Aguarde e consulte novamente.'
+  } catch (error) { if (!silent) checkoutError.value = error.message || 'Não foi possível consultar o pagamento' }
   finally { checkingStatus.value = false }
 }
 
@@ -193,7 +237,7 @@ async function copyPix() {
   catch { checkoutError.value = 'Selecione e copie manualmente o código Pix.' }
 }
 
-onBeforeUnmount(() => { brickController?.unmount?.() })
+onBeforeUnmount(() => { destroyed = true; stopAutomaticChecks(); brickController?.unmount?.() })
 function formatCurrency(value) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) }
 </script>
 
