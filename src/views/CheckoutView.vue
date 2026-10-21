@@ -96,6 +96,7 @@ import { useCartStore } from '../stores/cartStore'
 
 const cartStore = useCartStore()
 const key = (import.meta.env.VITE_MP_PUBLIC_KEY || '').trim()
+let checkoutAttemptId = crypto.randomUUID()
 const transparentAvailable = !!key && import.meta.env.VITE_MP_TRANSPARENT_ENABLED === 'true'
 const paymentMethod = ref(transparentAvailable ? 'pix' : 'pro')
 const formElement = ref(null)
@@ -145,6 +146,7 @@ async function beginCard() {
         try {
           const result = await apiFetch('/checkout/transparent', {
             method: 'POST',
+            headers: { 'X-Checkout-Request-Id': checkoutAttemptId },
             body: JSON.stringify({ checkout: checkoutData(), method: 'card', cardToken: cardData.token,
               brand: cardData.payment_method_id, installments: Number(cardData.installments) }),
           })
@@ -174,7 +176,7 @@ async function finishOrder() {
       if (!result.checkoutUrl?.startsWith('https://')) throw new Error('Link de pagamento inválido')
       window.location.assign(result.checkoutUrl)
     } else {
-      const result = await apiFetch('/checkout/transparent', { method: 'POST', body: JSON.stringify({ checkout: checkoutData(), method: 'pix' }) })
+      const result = await apiFetch('/checkout/transparent', { method: 'POST', headers: { 'X-Checkout-Request-Id': checkoutAttemptId }, body: JSON.stringify({ checkout: checkoutData(), method: 'pix' }) })
       paymentResult.value = result
       paymentStatus.value = result.status
     }
